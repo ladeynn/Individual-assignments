@@ -20,7 +20,6 @@ public class AIShell : MonoBehaviour {
 
     void Start()
     {
-
         rb = GetComponent<Rigidbody>();
     }
 

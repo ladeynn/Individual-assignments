@@ -10,8 +10,7 @@ public class FireShell : MonoBehaviour {
     public Transform turretBase;
 
     private float speed = 15.0f;
-    private float rotSpeed = 2.0f;
-    
+    private float rotSpeed = 5.0f;
     private float moveSpeed = 1.0f;
 
     static float delayReset = 0.2f;
@@ -23,28 +22,17 @@ public class FireShell : MonoBehaviour {
         shell.GetComponent<Rigidbody>().velocity = speed * turretBase.forward;
     }
 
-    void RotateTurret()
+    float? RotateTurret()
     {
 
         float? angle = CalculateAngle(false);
         if (angle != null)
         {
-
-            turretBase.localEulerAngles = new Vector3(360.0f - (float)angle, 0.0f, 0.0f);
-        }
-
-    }
-
-    /*float? RotateTurret() {
-
-        float? angle = CalculateAngle(false);
-
-        if (angle != null) {
-
             turretBase.localEulerAngles = new Vector3(360.0f - (float)angle, 0.0f, 0.0f);
         }
         return angle;
-    }*/
+    }
+
 
     float? CalculateAngle(bool low)
     {
@@ -75,10 +63,14 @@ public class FireShell : MonoBehaviour {
         Vector3 direction = (enemy.transform.position - this.transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0.0f, direction.z));
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime * rotSpeed);
-        RotateTurret();
-        if (Input.GetKeyDown(KeyCode.Space))
+        float? angle = RotateTurret();
+        if (angle != null)
         {
             CreateBullet();
+        }
+        else 
+        {
+            this.transform.Translate(0.0f, 0.0f, Time.deltaTime * moveSpeed);
         }
     }
 
